@@ -26,29 +26,51 @@
     
         <div class="row">
             <div class="col-3 input-group mb-3">
-                <select class="custom-select" id="inputGroupSelect02">
-                    <option selected>Choose...</option>
+                <select class="custom-select" id="inputGroup">
+                    <option selected value="0">Choose...</option>
                     <option value="1">Lyrics</option>
                     <option value="2">Artist</option>
                     <option value="3">Song</option>
+                    <option value="4">Biography</option>
                 </select>           
             </div>
 
             <div class="col-9 input-group mb-3">
-                <input type="text" class="form-control" placeholder="Search...">
+                <input type="text" class="form-control" placeholder="Search..." id="userInput">
                 <div class="input-group-append">
-                    <label class="input-group-text" for="inputGroupSelect02"><i class="material-icons" id="searchBtn">touch_app</i></label>
+                    <label class="input-group-text" for="inputGroup"><i class="material-icons" id="searchBtn">touch_app</i></label>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container" id="resultPage">
+        <div class="row">
+            <div class="col jumbotron text-center">
+                <h1 class="display-3">Music Search</h1>
+                <hr class="my-4">
+                <p>Enjoy what music can bring you!</p>
+            </div>
+        </div>
+
+        <div class="row"  id="result">
+            <div class="col-12 card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">The Search Resutls Are: </h5>
+                </div>
+            </div>
+        </div>
         
     </div>
 
     <div class="container" id="detailsPage">
-        
+        <div class="row">
+            <div class="col jumbotron text-center">
+                <h1 class="display-3">Music Search</h1>
+                <hr class="my-4">
+                <p>Enjoy what music can bring you!</p>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
