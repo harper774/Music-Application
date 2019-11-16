@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+   <link rel="stylesheet" href="style.css" />
+   <title>Project</title>
+</head>
+<style>
+   .jumbotron {
+       background-color: blue;
+       color: white;
+       text-align: center;
+   }
+</style>
+<body>
+   <div class="jumbotron">
+       <div class="container text-center">
+           <h1>Music Search</h1>
+       </div>
+   </div>
+   <form>
+       <div class="form-group">
+           <label for="exampleFormControlSelect1">Biography Selection</label>
+           <select class="form-control" id="exampleFormControlSelect1">
+               <option>Artist</option>
+               <option>Band</option>
+           </select>
+       </div>
+       <div class="form-group">
+           <label for="exampleFormControlInput1">Artist/Band Name</label>
+           <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Artist/Band Name">
+       </div>
+       <button type="submit" class="btn btn-primary my-1">Submit</button>
+       <div id="out">
+       </div>
+   </form>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+   <script type="text/javascript"></script>
+   <script>
+   $(".btn").on("click", function () {
+       event.preventDefault();
+       // https://www.theaudiodb.com/api/v1/json/1/search.php?s=coldplay
+       var inp = $("#exampleFormControlInput1").val();
+       console.log(inp);
+       var queryURL = "https://www.theaudiodb.com/api/v1/json/1/search.php?s=" + inp;
+       $.ajax({
+           url: queryURL,
+           method: "GET"
+       })
+           .then(function (response) {
+               // Log the queryURL
+               console.log(queryURL);
+               // Log the resulting object
+               console.log(response);
+               $("#out").text(response.artists[0].strBiographyEN);
+               console.log("bio: " + response.artists[0].strBiographyEN);
+           })
+   });
+   </script>
+</body>
+</html>
+
+
+
+
+
+
