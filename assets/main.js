@@ -1,3 +1,5 @@
+var auddAPIKey = "d5816eb0cda1bb2190e56d50e3158e61";
+
 init();
 $("#result").children().children().append(createBTn(-1));
 
@@ -48,12 +50,11 @@ function getMusic(){
             break;
         case "4":
             bioSearch(input);
-    }
-    
+    }   
 }
 
 function lyricSearch(input){
-    var queryURL = "https://api.audd.io/findLyrics/?q="+input;
+    var queryURL = "https://api.audd.io/findLyrics/?q="+input+"&api_token="+auddAPIKey;
     $.ajax({
         url: queryURL,
         method: "GET"
