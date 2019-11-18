@@ -1,8 +1,17 @@
 init();
 
 $("#searchBtn").on("click", function(){
+    //run getMusic function
     getMusic();
     result();
+});
+
+$("#backBtn").on("click",function(){
+    //emptying the input area
+    console.log("1");
+    init();
+    $("#userInput").val("");
+    $("#inputGroup").select().val("0");
 });
 
 //this is where all the functions are put
@@ -26,7 +35,7 @@ function details(){
 
 function getMusic(){
     var select = $("#inputGroup").select().val();
-    var input = $("#userInput").val();;
+    var input = $("#userInput").val();
     switch(select){
         case "0":
             break;
@@ -98,7 +107,7 @@ function displayResultLyrics(response){
         console.log("success");
         var songCollection = response.result;
         songCollection.forEach(function(element, i){
-            var card = $("<div>").addClass("col-3 card mb-2");
+            var card = $("<div>").addClass("col-4 card mb-2");
             var cardBody = $("<div>").addClass("card-body");
             var title = $("<h5>").addClass("card-title").text(i+" "+element.full_title);
             var artist = $("<p>").addClass("card-text").text(element.artist);
@@ -120,7 +129,8 @@ function displayResultArtist(response){
         var title = $("<h5>").addClass("card-title").text(result.strArtist);
         var artist = $("<p>").addClass("card-text").text(result.intFormedYear);
         var lyrics = $("<p>").addClass("card-text").text(result.strBiographyEN);
-        cardBody.append(title,artist,lyrics);
+        var detailsBtn = $("<button>").addClass("card-text btn btn-secondary").text("Details");
+        cardBody.append(title,artist,lyrics,detailsBtn);
         card.append(cardBody);
         $("#result").append(card);  
     }
