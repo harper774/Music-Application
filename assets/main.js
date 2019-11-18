@@ -1,8 +1,15 @@
 init();
+$("#result").children().children().append(createBTn(-1));
 
 $("#searchBtn").on("click", function(){
     getMusic();
     result();
+});
+
+$("#result").on("clicki","#backBtn",function(){
+    init();
+    $("#inputGroup").select().val("0");
+    $("#userInput").val("");
 });
 
 //this is where all the functions are put
@@ -26,7 +33,7 @@ function details(){
 
 function getMusic(){
     var select = $("#inputGroup").select().val();
-    var input = $("#userInput").val();;
+    var input = $("#userInput").val();
     switch(select){
         case "0":
             break;
@@ -81,7 +88,7 @@ function songSearch(input){
     });
 }
 
-function bioSearch(){
+function bioSearch(input){
     var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
     $.ajax({
         url: queryURL,
@@ -93,17 +100,37 @@ function bioSearch(){
     });
 }
 
+function createBTn(i){
+    if(i < 0){
+        var btn = $("<button>").attr({
+            "class":"card-text btn btn-secondary text-center",
+            "id": "backBtn"
+        }).text("Back");
+    }else if(i >= 0){
+        var btn = $("<button>").attr({
+            "class":"card-text btn btn-secondary",
+            "id": "detailsBtn"+i
+        }).text("Details");
+    }
+    return btn;
+}
+
 function displayResultLyrics(response){
     if(response.status === "success"){
         console.log("success");
         var songCollection = response.result;
         songCollection.forEach(function(element, i){
-            var card = $("<div>").addClass("col-3 card mb-2");
+            var card = $("<div>").addClass("col-6 card mb-2");
             var cardBody = $("<div>").addClass("card-body");
             var title = $("<h5>").addClass("card-title").text(i+" "+element.full_title);
-            var artist = $("<p>").addClass("card-text").text(element.artist);
-            var lyrics = $("<p>").addClass("card-text").text(element.lyrics);
-            cardBody.append(title,artist,lyrics);
+            var artist = $("<p>").addClass("card-text").text(element.artist);            
+            var lyrics = $("<div>").addClass("card-text");
+            var lyricsLine = element.lyrics.split("\n");
+            lyricsLine.forEach(function(el, index){
+                var lyricEl = $("<p>").text(el);
+                lyrics.append(lyricEl);
+            });            
+            cardBody.append(title,artist,lyrics, createBTn(i));
             card.append(cardBody);
             $("#result").append(card);          
         })
@@ -117,10 +144,10 @@ function displayResultArtist(response){
         var result = response.artists[0];
         var card = $("<div>").addClass("col-12 card mb-2");
         var cardBody = $("<div>").addClass("card-body");
-        var title = $("<h5>").addClass("card-title").text(result.strArtist);
-        var artist = $("<p>").addClass("card-text").text(result.intFormedYear);
-        var lyrics = $("<p>").addClass("card-text").text(result.strBiographyEN);
-        cardBody.append(title,artist,lyrics);
+        var artist = $("<h5>").addClass("card-title").text(result.strArtist);
+        var year = $("<p>").addClass("card-text").text(result.intFormedYear);
+        var bio = $("<p>").addClass("card-text").text(result.strBiographyEN);
+        cardBody.append(artist,year,bio,createBTn(1));
         card.append(cardBody);
         $("#result").append(card);  
     }
