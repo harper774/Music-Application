@@ -10,7 +10,7 @@ $("#searchBtn").on("click", function(){
     result();
 });
 
-$("#result").on("clicki","#backBtn",function(){
+$("#result").on("click","#backBtn",function(){
     init();
     $("#inputGroup").select().val("0");
     $("#userInput").val("");
