@@ -6,6 +6,7 @@ init();
 $("#result").children().children().append(createBTn(0));
 
 $("#searchBtn").on("click", function(){
+    //run getMusic function
     getMusic();
     result();
 });
