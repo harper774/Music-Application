@@ -1,9 +1,12 @@
-var auddAPIKey = "d5816eb0cda1bb2190e56d50e3158e61";
+var auddAPIKey = "d5816eb0cda1bb2190e56d50e3158e61";//this is the apiKey for audd API, 300 requests within thwo weeks' time
 var flag = 1;//this is the indicator of the title on more box
 var titleLength = 3;//this is the lenght of the title
+var input;//this is to store tht user input in this variable
+var select;//this is to store the user select in this variable
 
 init();
-$("#result").children().children().append(createBTn(0));
+$("#result").children(".card").children().append(createBTn(0));
+$("#details").children(".card").children().append(createBTn(0));
 
 $("#searchBtn").on("click", function(){
     //run getMusic function
@@ -11,17 +14,20 @@ $("#searchBtn").on("click", function(){
     result();
 });
 
-$("#result").on("clicki","#backBtn",function(){
+$("#result").on("click","#backBtn",function(){
     init();
-    $("#inputGroup").select().val("0");
+    // $("#inputGroup").select().val("0");
     $("#userInput").val("");
+    $("#resultDisplay").empty();
+});
+
+$("#details").on("click","#backBtn",function(){
+    result();
+    $("#detailsDisplay").empty();
 });
 
 $("#result").on("click","#moreBtn",function(){
     var flag = $(this).attr("flag");
-    console.log($(this).parent(".card-body"));
-    console.log($(this).parent(".card-body").children(".card-title").attr("show-value"));
-    console.log($(this).parent(".card-body").children(".card-title").attr("hide-value"));
     if(flag === "1"){
         $(this).parent(".card-body").children(".card-title").text($(this).parent(".card-body").children(".card-title").attr("show-value"));
         $(this).attr("flag",0);
@@ -29,6 +35,26 @@ $("#result").on("click","#moreBtn",function(){
         $(this).parent(".card-body").children(".card-title").text($(this).parent(".card-body").children(".card-title").attr("hide-value"));
         $(this).attr("flag",1);
     }   
+});
+
+$("#result").on("click", "#detailsBtn", function(){
+    details();
+    switch(select){
+        case "0":
+            break;
+        case  "1":
+            var search = $(this).parent(".card-body").children(".card-title").text();
+            displayDetailLyrics(search);
+            break;
+        case  "2":
+            var search = $(this).parent(".card-body").children(".albumTitle").text();
+            albumSearch(search);
+            break;
+        case  "3":
+            break;
+        case  "4":
+            break;
+    }
 });
 
 //this is where all the functions are put
@@ -51,26 +77,44 @@ function details(){
 }
 
 function getMusic(){
-    var select = $("#inputGroup").select().val();
-    var input = $("#userInput").val();
+    select = $("#inputGroup").select().val();
+    input = $("#userInput").val();
     switch(select){
         case "0":
             break;
         case "1":
-            lyricSearch(input);
+            lyricSearch();
             break;
         case "2":
-            artistSearch(input);
+            artistSearch();
             break;
         case "3":
-            songSearch(input);
+            songSearch();
             break;
         case "4":
-            bioSearch(input);
+            bioSearch();
     }   
 }
 
-function lyricSearch(input){
+// function getDetails(search){
+//     // select = $("#inputGroup").select().val();
+//     switch(select){
+//         case "0":
+//             break;
+//         case  "1":
+//             displayDetailLyrics(search);
+//             break;
+//         case  "2":
+//             albumSearch(search);
+//             break;
+//         case  "3":
+//             break;
+//         case  "4":
+//             break;
+//     }
+// }
+
+function lyricSearch(){
     var queryURL = "https://api.audd.io/findLyrics/?q="+input+"&api_token="+auddAPIKey;
     $.ajax({
         url: queryURL,
@@ -78,12 +122,13 @@ function lyricSearch(input){
     }).then(function(response){
         console.log("1.Lyric");
         console.log(response);
+        console.log(JSON.parse(response.result[0].media)[0]);
         displayResultLyrics(response);
     });
 }
 
-function artistSearch(input){
-    var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
+function artistSearch(){
+    var queryURL = "https://theaudiodb.com/api/v1/json/1/searchalbum.php?s="+input;
     $.ajax({
         url: queryURL,
         method: "GET"
@@ -94,7 +139,7 @@ function artistSearch(input){
     });
 }
 
-function songSearch(input){
+function songSearch(){
     var queryURL = "https://theaudiodb.com/api/v1/json/1/searchtrack.php?&t="+input;
     $.ajax({
         url: queryURL,
@@ -106,7 +151,7 @@ function songSearch(input){
     });
 }
 
-function bioSearch(input){
+function bioSearch(){
     var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
     $.ajax({
         url: queryURL,
@@ -114,8 +159,24 @@ function bioSearch(input){
     }).then(function(response){
         console.log("4.Bio");
         console.log(response);
-        displayResultArtist(response);
+        displayResultBio(response);
     });
+}
+
+function albumSearch(album){
+    var queryURL = "https://theaudiodb.com/api/v1/json/1/searchalbum.php?s="+input+"&a="+album;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        console.log("5.Album");
+        console.log(response);
+        displayDetailAlbum(response);
+    });
+}
+
+function lyricDisplay(response){
+
 }
 
 function createBTn(i){
@@ -136,31 +197,37 @@ function createBTn(i){
             "id": "moreBtn"
         }).text("More");
     }
+    return btn;
+}
 
+function moreForTitle(title,i){
+    //get the length of the word in a title string
+    var length = title.split(" ").length;
+    if(length>titleLength+1){
+        var btn = createBTn(2);
+    }
     return btn;
 }
 
 function displayResultLyrics(response){
     if(response.status === "success"){
         console.log("success");
-        console.log(response.media);
         var songCollection = response.result;
         songCollection.forEach(function(element, i){
             console.log(element.media);
             var card = $("<div>").attr({
                 "class": "col-12 col-md-6 col-lg-4 card mb-2",
-                "title-value": element.full_title,
+                "title-value": element.title,
                 "artist-value": element.artist
             });
-            console.log(element.full_title.split(" ").slice(0,titleLength));
             var cardBody = $("<div>").addClass("card-body");
-            var moreBtn = moreForTitle(element.full_title,i);
+            var moreBtn = moreForTitle(element.title,i);
             var title = $("<h5>").attr({
                 "class": "card-title text-center",
                 "id": "title"+i,
-                "hide-value": element.full_title.split(" ").slice(0, titleLength),
-                "show-value": element.full_title
-            }).text(element.full_title.split(" ").slice(0,titleLength));
+                "hide-value": element.title.split(" ").slice(0, titleLength).join(" "),
+                "show-value": element.title
+            }).text(element.title.split(" ").slice(0,titleLength).join(" "));
             var artist = $("<p>").addClass("card-text text-center").text(element.artist);            
             // var lyrics = $("<div>").addClass("card-text");
             // var lyricsLine = element.lyrics.split("\n");
@@ -168,40 +235,64 @@ function displayResultLyrics(response){
             //     var lyricEl = $("<p>").text(el);
             //     lyrics.append(lyricEl);
             // });  
-            // title.append(moreBtn);          
-            cardBody.append(title, moreBtn, artist, createBTn(1));
+            var youtubeLink = JSON.parse(response.result[0].media)[0].url;
+            var youtube = $("<a>").attr({
+                "class": "card-text btn btn-danger",
+                "href": youtubeLink
+            }).text("Youtube");   
+            cardBody.append(title, moreBtn, artist, youtube, createBTn(1));
             card.append(cardBody);
-            $("#result").append(card);          
+            $("#resultDisplay").append(card);          
         })
     }else{
         alertMsg();
     }
 }
 
-function moreForTitle(title,i){
-    //get the length of the word in a title string
-    var length = title.split(" ").length;
-    console.log(title.split(" "));
-    console.log(length);
-    if(length>titleLength+1){
-        var btn = createBTn(2);
-    }
-    return btn;
-}
-
-
-function displayResultArtist(response){
+function displayResultBio(response){
     if(response.artists){
         var result = response.artists[0];
         var card = $("<div>").addClass("col-12 card mb-2");
         var cardBody = $("<div>").addClass("card-body");
         var artist = $("<h5>").addClass("card-title").text(result.strArtist);
         var year = $("<p>").addClass("card-text").text(result.intFormedYear);
-        var bio = $("<p>").addClass("card-text").text(result.strBiographyEN);
+        // var bio = $("<p>").addClass("card-text").text(result.strBiographyEN);
+        var bio = $("<div>").addClass("card-text");
+        var bioLine = result.strBiographyEN.split("\n");
+        bioLine.forEach(function(el){
+            var bioEl = $("<p>").text(el);
+            bio.append(bioEl);
+        });    
         cardBody.append(artist,year,bio,createBTn(1));
         card.append(cardBody);
-        $("#result").append(card);  
+        $("#resultDisplay").append(card);  
     }
+}
+
+function displayResultArtist(response){
+    var album = response.album;
+    console.log(album);
+    var albumCollection = response.album;
+    albumCollection.forEach(function(element, i){
+        var card = $("<div>").attr({
+            "class": "col-12 col-md-6 col-lg-4 card mb-2"
+        });
+        var cardBody = $("<div>").addClass("card-body");
+        var title = $("<h5>").attr({
+            "class": "card-title text-center albumTitle",
+            "id": "title"+i,
+        }).text(element.strAlbum);
+        var artist = $("<p>").addClass("card-text text-center").text(element.strArtist);            
+        // var lyrics = $("<div>").addClass("card-text");
+        // var lyricsLine = element.lyrics.split("\n");
+        // lyricsLine.forEach(function(el){
+        //     var lyricEl = $("<p>").text(el);
+        //     lyrics.append(lyricEl);
+        // });         
+        cardBody.append(title, artist, createBTn(1));
+        card.append(cardBody);
+        $("#resultDisplay").append(card);          
+    })
 }
 
 function displayResultSong(response){
@@ -211,3 +302,4 @@ function displayResultSong(response){
 function alertMsg(){
     console.log("error");
 }
+
