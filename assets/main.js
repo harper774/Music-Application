@@ -9,6 +9,7 @@ $("#result").children(".card").children().append(createBTn(0));
 $("#details").children(".card").children().append(createBTn(0));
 
 $("#searchBtn").on("click", function(){
+    //run getMusic function
     getMusic();
     result();
 });

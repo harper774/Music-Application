@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search results</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+    <!-- https://api.audd.io/findLyrics/?q=hello -->
+    <section class="section">
+        <div class="container">
+            <div class="columns" id="songOutput">
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title" id=fullTitle>
+                                Hello by Adele
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <div id="songName">Hello</div>
+                                <div id="artistName">Adele</div>
+                                <a href="http:\\/\\/www.youtube.com\\/watch?v=YQHsXMglC9A\">Video</a>
+                                <!-- https://www.youtube.com/watch?v=YQHsXMglC9A -->
+                                <br>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="lirics.html" class="card-footer-item">Details</a>
+                        </footer>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title" id=fullTitle>
+                                Hello Cotto by Duki
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <div id="songName">Hello Cotto</div>
+                                <div id="artistName">Duki</div>
+                                <a href="http:\\/\\/www.youtube.com\\/watch?v=6biv8AQcjNU\">Video</a>
+                                <br>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="lirics.html" class="card-footer-item">Details</a>
+                        </footer>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title" id=fullTitle>
+                                Hello by J. Cole
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <div id="songName">Hello</div>
+                                <div id="artistName">J. Cole</div>
+                                <a href="http:www.youtube.com/watch?v=M-438ByG2kQ">Video</a>
+                                <br>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="lirics.html" class="card-footer-item">Details</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+            <!-- https://www.theaudiodb.com/api/v1/json/1/search.php?s=coldplay -->
+            <div class="columns" id="artistOutput">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="https://www.theaudiodb.com/images/media/artist/widethumb/sqqqxt1516289760.jpg"
+                                    alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <div class="media">
+                                <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src="https://www.theaudiodb.com/images/media/artist/thumb/wtxxru1527589862.jpg"
+                                            alt="Placeholder image">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <p class="title is-4">Taylor Swift</p>
+                                </div>
+                            </div>
+
+                            <div class="content">
+                                <p id="genre">Pop</p>
+                                <p id="formedYear">2006</p>
+                                <p id="country">Pensylvania, USA</p>
+
+                                <a href="taylorswift.com">website</a>
+                                <br>
+                                <footer class="card-footer">
+                                    <a href="Biography.html" class="card-footer-item">Details</a>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="index.html" class="button is-light">Go Back</a>
+        </div>
+    </section>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="results.js"></script>
+
+</html>

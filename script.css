@@ -1,0 +1,31 @@
+#album-img{
+    float: left;
+}
+
+#album{
+    align-items: center;
+}
+
+#card1{
+    align-items: center;
+    margin-left: 100px;
+    margin-right: 100px;   
+}
+#card2{
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+#head{
+    margin-top: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: gray;
+    font-size: 25px;
+}
+
+#back{
+    float: right;
+    margin-right: 120px;
+    margin-bottom: 50px;
+}
