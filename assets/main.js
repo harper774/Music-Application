@@ -1,8 +1,9 @@
 var auddAPIKey = "d5816eb0cda1bb2190e56d50e3158e61";//this is the apiKey for audd API, 300 requests within thwo weeks' time
 var flag = 1;//this is the indicator of the title on more box
-var titleLength = 3;//this is the lenght of the title
+var titleLength = 5;//this is the lenght of the title
 var input;//this is to store tht user input in this variable
 var select;//this is to store the user select in this variable
+var lyricsLineArray = [];//thsi is to store the data for lyrics which could be sued fo other functions
 
 init();
 $("#result").children(".card").children().append(createBTn(0));
@@ -43,17 +44,19 @@ $("#result").on("click", "#detailsBtn", function(){
         case "0":
             break;
         case  "1":
-            var search = $(this).parent(".card-body").children(".card-title").text();
+            var search = $(this).parent(".card-body").children(".card-title").attr("id");
+            search = search.replace(/[^0-9]/ig,"");//delete the non-number characters in the string
+            console.log(search);
             displayDetailLyrics(search);
             break;
         case  "2":
             var search = $(this).parent(".card-body").children(".albumTitle").text();
             albumSearch(search);
             break;
-        case  "3":
-            break;
-        case  "4":
-            break;
+        // case  "3":
+        //     break;
+        // case  "4":
+        //     break;
     }
 });
 
@@ -88,31 +91,13 @@ function getMusic(){
         case "2":
             artistSearch();
             break;
-        case "3":
-            songSearch();
-            break;
-        case "4":
-            bioSearch();
+        // case "3":
+        //     songSearch();
+        //     break;
+        // case "4":
+        //     bioSearch();
     }   
 }
-
-// function getDetails(search){
-//     // select = $("#inputGroup").select().val();
-//     switch(select){
-//         case "0":
-//             break;
-//         case  "1":
-//             displayDetailLyrics(search);
-//             break;
-//         case  "2":
-//             albumSearch(search);
-//             break;
-//         case  "3":
-//             break;
-//         case  "4":
-//             break;
-//     }
-// }
 
 function lyricSearch(){
     var queryURL = "https://api.audd.io/findLyrics/?q="+input+"&api_token="+auddAPIKey;
@@ -122,7 +107,7 @@ function lyricSearch(){
     }).then(function(response){
         console.log("1.Lyric");
         console.log(response);
-        console.log(JSON.parse(response.result[0].media)[0]);
+        console.log(JSON.parse(response.result[0].media));
         displayResultLyrics(response);
     });
 }
@@ -139,29 +124,29 @@ function artistSearch(){
     });
 }
 
-function songSearch(){
-    var queryURL = "https://theaudiodb.com/api/v1/json/1/searchtrack.php?&t="+input;
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    }).then(function(response){
-        console.log("3.Song");
-        console.log(response);
-        displayResultSong(response);
-    });
-}
+// function songSearch(){
+//     var queryURL = "https://theaudiodb.com/api/v1/json/1/searchtrack.php?&t="+input;
+//     $.ajax({
+//         url: queryURL,
+//         method: "GET"
+//     }).then(function(response){
+//         console.log("3.Song");
+//         console.log(response);
+//         displayResultSong(response);
+//     });
+// }
 
-function bioSearch(){
-    var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    }).then(function(response){
-        console.log("4.Bio");
-        console.log(response);
-        displayResultBio(response);
-    });
-}
+// function bioSearch(){
+//     var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
+//     $.ajax({
+//         url: queryURL,
+//         method: "GET"
+//     }).then(function(response){
+//         console.log("4.Bio");
+//         console.log(response);
+//         displayResultBio(response);
+//     });
+// }
 
 function albumSearch(album){
     var queryURL = "https://theaudiodb.com/api/v1/json/1/searchalbum.php?s="+input+"&a="+album;
@@ -229,21 +214,33 @@ function displayResultLyrics(response){
                 "show-value": element.title
             }).text(element.title.split(" ").slice(0,titleLength).join(" "));
             var artist = $("<p>").addClass("card-text text-center").text(element.artist);            
-            // var lyrics = $("<div>").addClass("card-text");
-            // var lyricsLine = element.lyrics.split("\n");
-            // lyricsLine.forEach(function(el){
-            //     var lyricEl = $("<p>").text(el);
-            //     lyrics.append(lyricEl);
-            // });  
-            var youtubeLink = JSON.parse(response.result[0].media)[0].url;
+            var lyrics = $("<div>").addClass("card-text");
+            var lyricsLine = element.lyrics.split("\n");
+            lyricsLineArray[i] = lyricsLine;
+            lyricsLine.forEach(function(el){
+                var lyricEl = $("<p>").text(el);
+                lyrics.append(lyricEl);
+            });
+            //the reason of doing youtubeLinkP is bacause the audd api
+            //is not so clever with result
+            //sometimes the result's key-value pari sequence will change
+            var youtubeLinkP = JSON.parse(response.result[i].media);
+            var youtubeLink;
+            youtubeLinkP.forEach(function(el){
+                if (el.provider === "youtube"){
+                    youtubeLink = el.url;
+                }
+            });
             var youtube = $("<a>").attr({
                 "class": "card-text btn btn-danger",
-                "href": youtubeLink
+                "href": youtubeLink,
+                "target": "_blank"
             }).text("Youtube");   
             cardBody.append(title, moreBtn, artist, youtube, createBTn(1));
             card.append(cardBody);
             $("#resultDisplay").append(card);          
         })
+        console.log(lyricsLineArray); 
     }else{
         alertMsg();
     }
@@ -303,3 +300,33 @@ function alertMsg(){
     console.log("error");
 }
 
+function displayDetailAlbum(response){
+    var album = response.album[0];
+    // var result = response.artists[0];
+    var card = $("<div>").addClass("col-12 card mb-2");
+    var cardBody = $("<div>").addClass("card-body");
+    var artist = $("<h5>").addClass("card-title").text(album.strAlbum);
+    var year = $("<p>").addClass("card-text").text(album.intYearReleased);
+    // var bio = $("<p>").addClass("card-text").text(result.strBiographyEN);
+    var bio = $("<div>").addClass("card-text");
+    var bioLine = album.strDescriptionEN.split("\n");
+    bioLine.forEach(function(el){
+        var bioEl = $("<p>").text(el);
+        bio.append(bioEl);
+    });    
+    cardBody.append(artist,year,bio);
+    card.append(cardBody);
+    $("#detailsDisplay").append(card);  
+}
+
+function displayDetailLyrics(i){
+    var card = $("<div>").addClass("col-12 card mb-2");
+    var cardBody = $("<div>").addClass("card-body");
+    var lyrics = $("<div>").addClass("card-text");
+    lyricsLineArray[i].forEach(function(el){
+        var lyricEl = $("<p>").text(el);
+        lyrics.append(lyricEl);
+    }); 
+    card.append(cardBody, lyrics);
+    $("#detailsDisplay").append(card);  
+}
