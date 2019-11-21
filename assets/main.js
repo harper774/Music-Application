@@ -187,12 +187,14 @@ function createBTn(i){
         }).text("Back");
     }else if(i === 1){
         var btn = $("<button>").attr({
-            "class":"card-text btn btn-secondary",
+            "class": "content button is-info is-light",
+            // "class":"card-text btn btn-secondary",
             "id": "detailsBtn"
         }).text("Details");
     }else if(i === 2){
         var btn = $("<button>").attr({
-            "class":"card-text btn btn-success text-right ml-2",
+            "class":"content button is-success has-text-right",
+            // "class":"card-text btn-success text-right ml-2",
             "flag": 1,//flag is to show the stautus of the shwo/hide of the more box
             "id": "moreBtn"
         }).text("More");
@@ -216,19 +218,23 @@ function displayResultLyrics(response){
         songCollection.forEach(function(element, i){
             console.log(element.media);
             var card = $("<div>").attr({
-                "class": "col-12 col-md-6 col-lg-4 card mb-2",
+                "class": "column is-full-mobile is-half-tablet is-one-third-desktop is-one-third-widescreen is-one-third-fullhd card",
+                // "class": "col-12 col-md-6 col-lg-4 card mb-2",
                 "title-value": element.title,
                 "artist-value": element.artist
             });
-            var cardBody = $("<div>").addClass("card-body");
+            // var cardBody = $("<div>").addClass("card-body");
+            var cardBody = $("<div>").addClass("card-content");
             var moreBtn = moreForTitle(element.title,i);
             var title = $("<h5>").attr({
-                "class": "card-title text-center",
+                "class": "card-header-title",
+                // "class": "card-title text-center",
                 "id": "title"+i,
                 "hide-value": element.title.split(" ").slice(0, titleLength).join(" "),
                 "show-value": element.title
             }).text(element.title.split(" ").slice(0,titleLength).join(" "));
-            var artist = $("<p>").addClass("card-text text-center").text(element.artist);            
+            var artist = $("<p>").addClass("content").text(element.artist);            
+            // var artist = $("<p>").addClass("card-text text-center").text(element.artist);            
             // var lyrics = $("<div>").addClass("card-text");
             // var lyricsLine = element.lyrics.split("\n");
             // lyricsLine.forEach(function(el){
@@ -237,7 +243,8 @@ function displayResultLyrics(response){
             // });  
             var youtubeLink = JSON.parse(response.result[0].media)[0].url;
             var youtube = $("<a>").attr({
-                "class": "card-text btn btn-danger",
+                "class": "content button is-danger",
+                // "class": "card-text btn btn-danger",
                 "href": youtubeLink
             }).text("Youtube");   
             cardBody.append(title, moreBtn, artist, youtube, createBTn(1));
