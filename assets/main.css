@@ -1,3 +1,13 @@
 body{
     font-family:'Noto Sans TC', sans-serif;
 }
+
+.mt-card{
+    margin-top:1rem;
+}
+
+#result, #details{
+    /* margin:0px; */
+    max-width:100%;
+}
+
