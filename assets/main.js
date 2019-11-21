@@ -63,6 +63,8 @@ function init(){
     $("#indexPage").css("display", "block");
     $("#resultPage").css("display", "none");
     $("#detailsPage").css("display", "none");
+    $("#trending").empty();
+    trendingSearch();
 }
 
 function result(){
@@ -80,6 +82,7 @@ function details(){
 function getMusic(){
     select = $("#inputGroup").select().val();
     input = $("#userInput").val();
+    $("#resultDisplay").html('<progress class="progress is-small is-primary" max="100">15%</progress>');
     switch(select){
         case "0":
             break;
@@ -95,6 +98,72 @@ function getMusic(){
         // case "4":
         //     bioSearch();
     }   
+}
+
+function trendingSearch(){
+    var queryURLS = "http://theaudiodb.com/api/v1/json/1/trending.php?country=us&type=itunes&format=singles";
+    $.ajax({
+        url: queryURLS,
+        method: "GET"
+    }).then(function(response){
+        console.log(response);
+        console.log(response.trending[1]);
+        var col = $("<div>").addClass("column is-half is-mobile");
+        var card = $("<div>").attr({
+            "class": "card has-text-centered mt-card is-light",
+            "style": "background-image:url('"+response.trending[0].strTrackThumb+"'); background-size:cover; color: white"
+        });
+        var cardHeader = $("<header>").addClass("card-header");
+        var title = $("<p>").attr({
+            "class": "card-header-title is-centered",
+            "style": "color: white"
+        }).text("Current Trending Singles: ");
+        var cardContent = $("<div>").addClass("card-content is-centered");
+        var content = $("<div>").addClass("content");           
+        response.trending.forEach(function(element,i){ 
+            // i = i+1; 
+            var li = $("<div>").text(i+1+". "+element.strTrack + " ---- " + element.strArtist); 
+            content.append(li);
+        });        
+        cardHeader.append(title);
+        // content.append(artist);  
+        cardContent.append(content);
+        card.append(cardHeader, cardContent);
+        col.append(card)
+        $("#trending").append(col);
+    });
+
+    var queryURLA = "http://theaudiodb.com/api/v1/json/1/trending.php?country=us&type=itunes&format=albums";
+    $.ajax({
+        url: queryURLA,
+        method: "GET"
+    }).then(function(response){
+        console.log(response);
+        var col = $("<div>").addClass("column is-half is-mobile");
+        var card = $("<div>").attr({
+            "class": "card has-text-centered mt-card is-light",
+            "style": "background-image:url('"+response.trending[0].strAlbumThumb+"')"
+        });
+        card.css("background-color: red");
+        var cardHeader = $("<header>").addClass("card-header");
+        var title = $("<p>").attr({
+            "class": "card-header-title is-centered",
+            // "id": "title",
+        }).text("Current Trending Albums: ");
+        var cardContent = $("<div>").addClass("card-content is-centered");
+        var content = $("<div>").addClass("content");           
+        response.trending.forEach(function(element,i){ 
+            // i = i+1; 
+            var li = $("<div>").text(i+1+". "+element.strAlbum + " ---- " + element.strArtist); 
+            content.append(li);
+        });        
+        cardHeader.append(title);
+        // content.append(artist);  
+        cardContent.append(content);
+        card.append(cardHeader, cardContent);
+        col.append(card)
+        $("#trending").append(col);
+    });
 }
 
 function lyricSearch(){
@@ -198,6 +267,7 @@ function moreForTitle(title,i){
 function displayResultLyrics(response){
     if(response.status === "success"){
         console.log("success");
+        $("#resultDisplay").empty();
         var songCollection = response.result;
         songCollection.forEach(function(element, i){
             console.log(element.media);
@@ -236,7 +306,7 @@ function displayResultLyrics(response){
                 }
             });
             var youtube = $("<a>").attr({
-                "class": "button is-small is-light is-rounded",
+                "class": "button is-small is-danger is-rounded mt-card",
                 "href": youtubeLink,
                 "target": "_blank"
             }).text("Youtube"); 
@@ -251,6 +321,7 @@ function displayResultLyrics(response){
             cardContent.append(content);
             card.append(cardHeader, cardContent, cardFooter);
             col.append(card)
+            
             $("#resultDisplay").append(col);          
         })
         console.log(lyricsLineArray); 
@@ -281,6 +352,7 @@ function displayResultBio(response){
 
 function displayResultArtist(response){
     var album = response.album;
+    $("#resultDisplay").empty();
     console.log(album);
     var albumCollection = response.album;
     albumCollection.forEach(function(element, i){
@@ -323,6 +395,7 @@ function alertMsg(){
 
 function displayDetailAlbum(album){
     // var album = response.album[0];
+    $("#detailsDisplay").empty();
     var col = $("<div>").addClass("column is-mobile");
     var card = $("<div>").attr({
         "class": "card has-text-centered mt-card is-light",
@@ -359,6 +432,7 @@ function displayDetailAlbum(album){
 }
 
 function displayDetailLyrics(i){
+    $("#detailsDisplay").empty();
     var col = $("<div>").addClass("column is-mobile");
     var card = $("<div>").attr({
         "class": "card has-text-centered mt-card is-light",
