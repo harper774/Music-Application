@@ -44,7 +44,7 @@
                             </span>
                         </p>
                         <p class="control">
-                            <input class="input" type="text" placeholder="Search..">
+                            <input class="input" type="text" id="userInput" placeholder="Search..">
                         </p>
                         <p class="control">
                             <a class="button is-dark" id="searchBtn">
@@ -58,27 +58,29 @@
     </section>
 
     <section class="section" id="resultPage">
-        <section class="hero is-light">
-            <div class="hero-body">
-                <div class="container">
-                    <h1 class="title">
-                        The results are as follows:
-                    </h1>
-                    <h2 class="subtitle" id="resultTitle"> 
-                        <button class="button is-warning mt-card" id="backBtn">Go Back</button>                     
-                    </h2>
+        <div class="container-fluid">       
+            <section class="hero is-light">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title">
+                            The results are as follows:
+                        </h1>
+                        <h2 class="subtitle" id="resultTitle"> 
+                            <button class="button is-warning mt-card" id="backBtn">Go Back</button>                     
+                        </h2>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <div class="container" id="result">
-            <div class="columns is-multiline" id="resultDisplay">
-            </div>
-        </div>       
+            <div class="container" id="result">
+                <div class="columns is-multiline" id="resultDisplay">
+                </div>
+            </div>  
+        </div>     
     </section>
 
     <section class="section" id="detailsPage">
-        <div class="container">
+        <div class="container-fluid">
             <section class="hero is-light">
                 <div class="hero-body">
                     <div class="container">
@@ -92,12 +94,10 @@
                 </div>
             </section>
 
-            <div class="columns"  id="details">
-                    <div class="column">
-                        <div id="detailsDisplay">
-                        </div>
-                    </div>
+            <div class="container"  id="details">
+                <div class="columns is-multiline" id="detailsDisplay">
                 </div>
+            </div>
         </div>
     </section>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

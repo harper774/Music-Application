@@ -44,19 +44,17 @@ $("#result").on("click", "#detailsBtn", function(){
         case "0":
             break;
         case  "1":
-            var search = $(this).parent(".card-body").children(".card-header").attr("id");
+            var search = $(this).parent(".card-footer").parent(".card").children(".card-header").children(".card-header-title").attr("id");
             search = search.replace(/[^0-9]/ig,"");//delete the non-number characters in the string
             console.log(search);
             displayDetailLyrics(search);
             break;
         case  "2":
-            var search = $(this).parent(".card-body").children(".albumTitle").text();
-            albumSearch(search);
+            var album = $(this).parent(".card-footer").parent(".card").children(".card-header").children(".card-header-title").text();
+            var search = $(this).parent(".card-footer").parent(".card").children(".card-header").children(".card-header-title").attr("id");
+            search = search.replace(/[^0-9]/ig,"");
+            albumSearch(album,search);
             break;
-        // case  "3":
-        //     break;
-        // case  "4":
-        //     break;
     }
 });
 
@@ -101,6 +99,7 @@ function getMusic(){
 
 function lyricSearch(){
     var queryURL = "https://api.audd.io/findLyrics/?q="+input+"&api_token="+auddAPIKey;
+    console.log(queryURL);
     $.ajax({
         url: queryURL,
         method: "GET"
@@ -148,7 +147,7 @@ function artistSearch(){
 //     });
 // }
 
-function albumSearch(album){
+function albumSearch(album,i){
     var queryURL = "https://theaudiodb.com/api/v1/json/1/searchalbum.php?s="+input+"&a="+album;
     $.ajax({
         url: queryURL,
@@ -156,7 +155,9 @@ function albumSearch(album){
     }).then(function(response){
         console.log("5.Album");
         console.log(response);
-        displayDetailAlbum(response);
+        var album = response.album[0];
+        console.log(album);
+        displayDetailAlbum(album);
     });
 }
 
@@ -283,44 +284,59 @@ function displayResultArtist(response){
     console.log(album);
     var albumCollection = response.album;
     albumCollection.forEach(function(element, i){
+        var col = $("<div>").addClass("column is-one-third is-mobile");
         var card = $("<div>").attr({
-            "class": "col-12 col-md-6 col-lg-4 card mb-2"
+            "class": "card has-text-centered mt-card is-light",
+            "title-value": element.title,
+            "artist-value": element.artist
         });
-        var cardBody = $("<div>").addClass("card-body");
-        var title = $("<h5>").attr({
-            "class": "card-header has-text-centered albumTitle",
+        // var moreBtn = moreForTitle(element.title,i);
+        var cardHeader = $("<header>").addClass("card-header");
+        var title = $("<p>").attr({
+            "class": "card-header-title is-centered",
             "id": "title"+i,
         }).text(element.strAlbum);
-        var artist = $("<p>").addClass("card-content has-text-centered").text(element.strArtist);            
-        // var lyrics = $("<div>").addClass("card-content");
-        // var lyricsLine = element.lyrics.split("\n");
-        // lyricsLine.forEach(function(el){
-        //     var lyricEl = $("<p>").text(el);
-        //     lyrics.append(lyricEl);
-        // });         
-        cardBody.append(title, artist, createBTn(1));
-        card.append(cardBody);
-        $("#resultDisplay").append(card);          
+        var cardContent = $("<div>").addClass("card-content is-centered");
+        var content = $("<div>").addClass("content");
+        var artist = $("<div>").text(element.strArtist);            
+        //the reason of doing youtubeLinkP is bacause the audd api
+        //is not so clever with result
+        //sometimes the result's key-value pari sequence will change
+        var cardFooter = $("<footer>").addClass("card-footer"); 
+        var detailsBtn = $("<a>").attr({
+            "id":"detailsBtn",
+            "class": "is-dark is-rounded button card-footer-item"
+        }).text("Details");
+        cardFooter.append(detailsBtn);
+        cardHeader.append(title);
+        content.append(artist);  
+        cardContent.append(content);
+        card.append(cardHeader, cardContent, cardFooter);
+        col.append(card)
+        $("#resultDisplay").append(col);           
     })
-}
-
-function displayResultSong(response){
-
 }
 
 function alertMsg(){
     console.log("error");
 }
 
-function displayDetailAlbum(response){
-    var album = response.album[0];
-    // var result = response.artists[0];
-    var card = $("<div>").addClass("col-12 card mb-2");
-    var cardBody = $("<div>").addClass("card-body");
-    var albumName = $("<h5>").addClass("card-header").text(album.strAlbum);
-    var year = $("<p>").addClass("card-content").text(album.intYearReleased);
-    // var bio = $("<p>").addClass("card-content").text(result.strBiographyEN);
-    var bio = $("<div>").addClass("card-content");
+function displayDetailAlbum(album){
+    // var album = response.album[0];
+    var col = $("<div>").addClass("column is-mobile");
+    var card = $("<div>").attr({
+        "class": "card has-text-centered mt-card is-light",
+    });
+    // var moreBtn = moreForTitle(element.title,i);
+    var cardHeader = $("<header>").addClass("card-header");
+    var title = $("<p>").attr({
+        "class": "card-header-title is-centered",
+        "id": "title",
+    }).text(album.strAlbum);
+    var cardContent = $("<div>").addClass("card-content is-centered");
+    var content = $("<div>").addClass("content");
+    var bio = $("<div>");
+    var artist = $("<div>").text(album.intYearReleased);            
     var bioAPI = album.strDescriptionEN;
     //this is to ensure that if there is no description
     //there will be notice inside ther area
@@ -333,19 +349,32 @@ function displayDetailAlbum(response){
     }else{
         bio.text("Sorry the detailed information for "+album.strAlbum+" of "+album.strArtist+" is not yet ready. Please try other artists.");
     }
-    cardBody.append(albumName,year,bio);
-    card.append(cardBody);
-    $("#detailsDisplay").append(card);  
+    var cardFooter = $("<footer>").addClass("card-footer"); 
+    cardHeader.append(title);
+    content.append(artist,bio);  
+    cardContent.append(content);
+    card.append(cardHeader, cardContent, cardFooter);
+    col.append(card)
+    $("#detailsDisplay").append(col);
 }
 
 function displayDetailLyrics(i){
-    var card = $("<div>").addClass("col-12 card mb-2");
-    var cardBody = $("<div>").addClass("card-body");
-    var lyrics = $("<div>").addClass("card-content");
+    var col = $("<div>").addClass("column is-mobile");
+    var card = $("<div>").attr({
+        "class": "card has-text-centered mt-card is-light",
+    });
+    var cardHeader = $("<header>").addClass("card-header");
+    var cardContent = $("<div>").addClass("card-content is-centered");
+    var content = $("<div>").addClass("content");
+    var lyrics = $("<div>");
     lyricsLineArray[i].forEach(function(el){
         var lyricEl = $("<p>").text(el);
         lyrics.append(lyricEl);
     }); 
-    card.append(cardBody, lyrics);
-    $("#detailsDisplay").append(card);  
+    // cardHeader.append(title);
+    content.append(lyrics);  
+    cardContent.append(content);
+    card.append(cardHeader, cardContent);
+    col.append(card)
+    $("#detailsDisplay").append(col);
 }
