@@ -101,6 +101,7 @@ function getMusic(){
 }
 
 function trendingSearch(){
+    $("#trending").html('<progress class="progress is-small is-primary" max="100">15%</progress>');
     var queryURLS = "http://theaudiodb.com/api/v1/json/1/trending.php?country=us&type=itunes&format=singles";
     $.ajax({
         url: queryURLS,
@@ -108,6 +109,7 @@ function trendingSearch(){
     }).then(function(response){
         console.log(response);
         console.log(response.trending[1]);
+        // $("#trending").empty();
         var col = $("<div>").addClass("column is-half is-mobile");
         var card = $("<div>").attr({
             "class": "card has-text-centered mt-card is-light",
@@ -217,11 +219,13 @@ function artistSearch(){
 // }
 
 function albumSearch(album,i){
+    $("#detailsDisplay").html('<progress class="progress is-small is-primary" max="100">15%</progress>');
     var queryURL = "https://theaudiodb.com/api/v1/json/1/searchalbum.php?s="+input+"&a="+album;
     $.ajax({
         url: queryURL,
         method: "GET"
     }).then(function(response){
+        $("#detailsDisplay").empty();
         console.log("5.Album");
         console.log(response);
         var album = response.album[0];
@@ -404,8 +408,17 @@ function displayDetailAlbum(album){
     var cardHeader = $("<header>").addClass("card-header");
     var title = $("<p>").attr({
         "class": "card-header-title is-centered",
-        "id": "title",
+        "id": "title"
     }).text(album.strAlbum);
+    var title2 = $("<p>").attr({
+        "class": "card-header-title is-centered",
+    }).text(album.strArtist);
+    var cardImage = $("<div>").addClass("card-image");
+    var figure = $("<figure>").addClass("image is-1by1");
+    var img = $("<img>").attr({
+        "src": album.strAlbumThumb
+    });
+    cardImage.append(figure.append(img));
     var cardContent = $("<div>").addClass("card-content is-centered");
     var content = $("<div>").addClass("content");
     var bio = $("<div>");
@@ -423,10 +436,10 @@ function displayDetailAlbum(album){
         bio.text("Sorry the detailed information for "+album.strAlbum+" of "+album.strArtist+" is not yet ready. Please try other artists.");
     }
     var cardFooter = $("<footer>").addClass("card-footer"); 
-    cardHeader.append(title);
+    cardHeader.append(title, title2);
     content.append(artist,bio);  
     cardContent.append(content);
-    card.append(cardHeader, cardContent, cardFooter);
+    card.append(cardImage, cardHeader, cardContent, cardFooter);
     col.append(card)
     $("#detailsDisplay").append(col);
 }

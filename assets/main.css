@@ -11,3 +11,22 @@ body{
     max-width:100%;
 }
 
+.card-image{
+    width:40%;
+    height:40%;
+    margin:auto;
+    transition:all 2s;
+}
+
+.card-image:hover{
+    width:60%;
+    height:60%;
+}
+
+#detailsBtn{
+    transition:all 1s;
+}
+
+#detailsBtn:hover{
+    background-color:rgb(177, 112, 112);
+}
