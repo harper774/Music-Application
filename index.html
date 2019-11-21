@@ -6,89 +6,100 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Music Application</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
 	<link rel="stylesheet" type="text/css" href="assets/main.css">
 	<link href="https://fonts.googleapis.com/css?family=Mansalva&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container" id="indexPage">
-        <div class="row">
-            <div class="col jumbotron text-center">
-                <h1 class="display-3">Music Search</h1>
-                <hr class="my-4">
-                <p>Enjoy what music can bring you!</p>
+
+    <section class="hero is-medium is-dark is-bold">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title">
+                    Music Search
+                </h1>
+                <h2 class="subtitle">
+                    Enjoy what music can bring to you!
+                </h2>
             </div>
         </div>
-    
-        <div class="row">
-            <div class="col-3 input-group mb-3">
-                <select class="custom-select" id="inputGroup">
-                    <option selected value="0">Choose...</option>
-                    <option value="1">Lyrics</option>
-                    <option value="2">Artist</option>
-                    <!-- <option value="3">Song</option>
-                    <option value="4">Biography</option> -->
-                </select>           
-            </div>
+    </section>
 
-            <div class="col-9 input-group mb-3">
-                <input type="text" class="form-control" placeholder="Search..." id="userInput">
-                <div class="input-group-append">
-                    <label class="input-group-text" for="inputGroup"><i class="material-icons" id="searchBtn">touch_app</i></label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container" id="resultPage">
-        <div class="row">
-            <div class="col jumbotron text-center">
-                <h1 class="display-3">Music Search</h1>
-                <hr class="my-4">
-                <p>Enjoy what music can bring you!</p>
-            </div>
-        </div>
-
-        <div class="row"  id="result">
-            <div class="col-12 card mb-2">
-                <div class="card-body">
-                    <h5 class="card-title text-center">The Search Resutls Are: </h5>
-                </div>
-            </div>
-            <div class="col-12 mb-2">
-                <div class="row"  id="resultDisplay">
-                </div>
-            </div>
-        </div>
-        
-    </div>
-
-    <div class="container" id="detailsPage">
-        <div class="row">
-            <div class="col jumbotron text-center">
-                <h1 class="display-3">Music Search</h1>
-                <hr class="my-4">
-                <p>Enjoy what music can bring you!</p>
-            </div>
-        </div>
-
-        <div class="row"  id="details">
-                <div class="col-12 card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">The Detailed Resutls Are: </h5>
-                    </div>
-                </div>
-                <div class="col-12 mb-2">
-                    <div class="row"  id="detailsDisplay">
+    <section class="section" id="indexPage">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field has-addons has-addons-centered">
+                        <p class="control">
+                            <span class="select">
+                            <select id="inputGroup">
+                                <option selected value="0">Choose..</option>
+                                <option value="1">Lyrics/Song</option>
+                                <option value="2">Artist</option>
+                            </select>
+                            </span>
+                        </p>
+                        <p class="control">
+                            <input class="input" type="text" placeholder="Search..">
+                        </p>
+                        <p class="control">
+                            <a class="button is-dark" id="searchBtn">
+                            Search
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
+    </section>
 
+    <section class="section" id="resultPage">
+        <section class="hero is-light">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        The results are as follows:
+                    </h1>
+                    <h2 class="subtitle" id="resultTitle"> 
+                        <button class="button is-warning mt-card" id="backBtn">Go Back</button>                     
+                    </h2>
+                </div>
+            </div>
+        </section>
+
+        <div class="container" id="result">
+            <div class="columns is-multiline" id="resultDisplay">
+            </div>
+        </div>       
+    </section>
+
+    <section class="section" id="detailsPage">
+        <div class="container">
+            <section class="hero is-light">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title">
+                            The results are as follows:
+                        </h1>
+                        <h2 class="subtitle" id="detailsTitle">  
+                            <button class="button is-warning mt-card" id="backBtn">Go Back</button>                     
+                        </h2>
+                    </div>
+                </div>
+            </section>
+
+            <div class="columns"  id="details">
+                    <div class="column">
+                        <div id="detailsDisplay">
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </section>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 	<script type="text/javascript" src="assets/main.js"></script>
