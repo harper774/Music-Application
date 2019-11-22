@@ -58,6 +58,11 @@ $("#result").on("click", "#detailsBtn", function(){
     }
 });
 
+$("#result").on("click", "#artistName", function(){
+    details();
+    bioSearch();
+});
+
 //this is where all the functions are put
 function init(){
     $("#indexPage").css("display", "block");
@@ -102,7 +107,7 @@ function getMusic(){
 
 function trendingSearch(){
     $("#trending").html('<progress class="progress is-small is-primary" max="100">15%</progress>');
-    var queryURLS = "http://theaudiodb.com/api/v1/json/1/trending.php?country=us&type=itunes&format=singles";
+    var queryURLS = "https://theaudiodb.com/api/v1/json/1/trending.php?country=us&type=itunes&format=singles";
     $.ajax({
         url: queryURLS,
         method: "GET"
@@ -135,7 +140,7 @@ function trendingSearch(){
         $("#trending").append(col);
     });
 
-    var queryURLA = "http://theaudiodb.com/api/v1/json/1/trending.php?country=us&type=itunes&format=albums";
+    var queryURLA = "https://theaudiodb.com/api/v1/json/1/trending.php?country=us&type=itunes&format=albums";
     $.ajax({
         url: queryURLA,
         method: "GET"
@@ -206,17 +211,17 @@ function artistSearch(){
 //     });
 // }
 
-// function bioSearch(){
-//     var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
-//     $.ajax({
-//         url: queryURL,
-//         method: "GET"
-//     }).then(function(response){
-//         console.log("4.Bio");
-//         console.log(response);
-//         displayResultBio(response);
-//     });
-// }
+function bioSearch(){
+    var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        console.log("4.Bio");
+        console.log(response);
+        displayResultBio(response);
+    });
+}
 
 function albumSearch(album,i){
     $("#detailsDisplay").html('<progress class="progress is-small is-primary" max="100">15%</progress>');
@@ -291,7 +296,10 @@ function displayResultLyrics(response){
             }).text(element.title.split(" ").slice(0,titleLength).join(" "));
             var cardContent = $("<div>").addClass("card-content is-centered");
             var content = $("<div>").addClass("content");
-            var artist = $("<div>").text(element.artist);            
+            var artist = $("<div>").attr({
+                "id": "artistName",
+                "value": element.artist
+            }).text(element.artist);            
             var lyrics = $("<div>").addClass("card-content");
             var lyricsLine = element.lyrics.split("\n");
             lyricsLineArray[i] = lyricsLine;
@@ -336,21 +344,38 @@ function displayResultLyrics(response){
 
 function displayResultBio(response){
     if(response.artists){
+        $("#detailsDisplay").empty();
         var result = response.artists[0];
-        var card = $("<div>").addClass("is-mobile card mb-2");
-        var cardBody = $("<div>").addClass("card-body");
-        var artist = $("<h5>").addClass("card-header").text(result.strArtist);
-        var year = $("<p>").addClass("card-content").text(result.intFormedYear);
-        // var bio = $("<p>").addClass("card-content").text(result.strBiographyEN);
-        var bio = $("<div>").addClass("card-content");
+        var col = $("<div>").addClass("column is-mobile");
+        var card = $("<div>").attr({
+            "class": "card has-text-centered mt-card is-light",
+        });
+        // var moreBtn = moreForTitle(element.title,i);
+        var cardHeader = $("<header>").addClass("card-header");
+        var title = $("<p>").attr({
+            "class": "card-header-title is-centered",
+        }).text(result.strArtist);
+        var cardContent = $("<div>").addClass("card-content is-centered");
+        var content = $("<div>").addClass("content");
+        var bio = $("<div>").addClass("card-content");            
         var bioLine = result.strBiographyEN.split("\n");
-        bioLine.forEach(function(el){
-            var bioEl = $("<p>").text(el);
-            bio.append(bioEl);
-        });    
-        cardBody.append(artist,year,bio,createBTn(1));
-        card.append(cardBody);
-        $("#resultDisplay").append(card);  
+        //this is to ensure that if there is no description
+        //there will be notice inside ther area
+        if(bioLine){
+            bioLine.forEach(function(el){
+                var bioEl = $("<p>").text(el);
+                bio.append(bioEl);
+            });  
+        }else{
+            bio.text("Sorry the detailed information for "+result.strArtist+" is not yet ready. Please try other artists.");
+        }
+        var cardFooter = $("<footer>").addClass("card-footer"); 
+        cardHeader.append(title);
+        content.append(bio);  
+        cardContent.append(content);
+        card.append(cardHeader, cardContent, cardFooter);
+        col.append(card)
+        $("#detailsDisplay").append(col);
     }
 }
 
@@ -374,7 +399,11 @@ function displayResultArtist(response){
         }).text(element.strAlbum);
         var cardContent = $("<div>").addClass("card-content is-centered");
         var content = $("<div>").addClass("content");
-        var artist = $("<div>").text(element.strArtist);            
+        var artist = $("<button>").attr({
+            "id": "artistName",
+            "value": element.strArtist,
+            "class": "button is-danger"
+        }).text(element.strArtist);            
         //the reason of doing youtubeLinkP is bacause the audd api
         //is not so clever with result
         //sometimes the result's key-value pari sequence will change
