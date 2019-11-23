@@ -12,15 +12,15 @@ body{
 }
 
 .card-image{
-    width:40%;
-    height:40%;
+    width:20%;
+    height:20%;
     margin:auto;
     transition:all 2s;
 }
 
 .card-image:hover{
-    width:60%;
-    height:60%;
+    width:40%;
+    height:40%;
 }
 
 #detailsBtn{

@@ -12,7 +12,7 @@ init();
 $("#searchBtn").on("click", function(){
     //run getMusic function
     getMusic();
-    result();
+
 });
 
 $("#resultTitle").on("click","#backBtn",function(){
@@ -93,9 +93,11 @@ function getMusic(){
             break;
         case "1":
             lyricSearch();
+            result();
             break;
         case "2":
             artistSearch();
+            result();
             break;
         // case "3":
         //     songSearch();
@@ -283,6 +285,7 @@ function displayResultLyrics(response){
             var col = $("<div>").addClass("column is-one-third is-mobile");
             var card = $("<div>").attr({
                 "class": "card has-text-centered mt-card is-light",
+                
                 "title-value": element.title,
                 "artist-value": element.artist
             });
@@ -388,6 +391,7 @@ function displayResultArtist(response){
         var col = $("<div>").addClass("column is-one-third is-mobile");
         var card = $("<div>").attr({
             "class": "card has-text-centered mt-card is-light",
+            "style": "background-image:url('"+element.strAlbumThumb+"'); background-size:cover; color: white",
             "title-value": element.title,
             "artist-value": element.artist
         });
