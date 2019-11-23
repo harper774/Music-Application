@@ -282,62 +282,71 @@ function displayResultLyrics(response){
         var songCollection = response.result;
         songCollection.forEach(function(element, i){
             console.log(element.media);
-            var col = $("<div>").addClass("column is-one-third is-mobile");
-            var card = $("<div>").attr({
-                "class": "card has-text-centered mt-card is-light",
-                
-                "title-value": element.title,
-                "artist-value": element.artist
-            });
-            // var moreBtn = moreForTitle(element.title,i);
-            var cardHeader = $("<header>").addClass("card-header");
-            var title = $("<p>").attr({
-                "class": "card-header-title is-centered",
-                "id": "title"+i,
-                "hide-value": element.title.split(" ").slice(0, titleLength).join(" "),
-                "show-value": element.title
-            }).text(element.title.split(" ").slice(0,titleLength).join(" "));
-            var cardContent = $("<div>").addClass("card-content is-centered");
-            var content = $("<div>").addClass("content");
-            var artist = $("<div>").attr({
-                "id": "artistName",
-                "value": element.artist
-            }).text(element.artist);            
-            var lyrics = $("<div>").addClass("card-content");
-            var lyricsLine = element.lyrics.split("\n");
-            lyricsLineArray[i] = lyricsLine;
-            lyricsLine.forEach(function(el){
-                var lyricEl = $("<p>").text(el);
-                lyrics.append(lyricEl);
-            });
-            //the reason of doing youtubeLinkP is bacause the audd api
-            //is not so clever with result
-            //sometimes the result's key-value pari sequence will change
-            var youtubeLinkP = JSON.parse(response.result[i].media);
-            var youtubeLink;
-            youtubeLinkP.forEach(function(el){
-                if (el.provider === "youtube"){
-                    youtubeLink = el.url;
-                }
-            });
-            var youtube = $("<a>").attr({
-                "class": "button is-small is-danger is-rounded mt-card",
-                "href": youtubeLink,
-                "target": "_blank"
-            }).text("Youtube"); 
-            var cardFooter = $("<footer>").addClass("card-footer"); 
-            var detailsBtn = $("<a>").attr({
-                "id":"detailsBtn",
-                "class": "is-dark is-rounded button card-footer-item"
-            }).text("Details");
-            cardFooter.append(detailsBtn);
-            cardHeader.append(title);
-            content.append(artist, youtube);  
-            cardContent.append(content);
-            card.append(cardHeader, cardContent, cardFooter);
-            col.append(card)
-            
-            $("#resultDisplay").append(col);          
+            var col = $("<div>").addClass("column is-one-third is-mobile");            
+            var queryurl = "https://theaudiodb.com/api/v1/json/1/searchalbum.php?s="+element.artist+"&t="+element.title;  
+            $.ajax({
+                url: queryurl,
+                method: "GET"
+            }).then(function(res){
+                console.log("display image");
+                console.log(res);
+                var card = $("<div>").attr({
+                    "class": "card has-text-centered mt-card is-light",
+                    "style": "background-image:url('"+res.album[0].strAlbumThumb+"'); background-size:cover; color: white",
+                    "title-value": element.title,
+                    "artist-value": element.artist
+                });
+                // var moreBtn = moreForTitle(element.title,i);
+                var cardHeader = $("<header>").addClass("card-header");
+                var title = $("<p>").attr({
+                    "class": "card-header-title is-centered",
+                    "id": "title"+i,
+                    "hide-value": element.title.split(" ").slice(0, titleLength).join(" "),
+                    "show-value": element.title
+                }).text(element.title.split(" ").slice(0,titleLength).join(" "));
+                var cardContent = $("<div>").addClass("card-content is-centered");
+                var content = $("<div>").addClass("content");
+                var artist = $("<div>").attr({
+                    "id": "artistName",
+                    // "style": "color: white",
+                    "value": element.artist,
+                    "class": "button is-warning"
+                }).text(element.artist);            
+                var lyrics = $("<div>").addClass("card-content");
+                var lyricsLine = element.lyrics.split("\n");
+                lyricsLineArray[i] = lyricsLine;
+                lyricsLine.forEach(function(el){
+                    var lyricEl = $("<p>").text(el);
+                    lyrics.append(lyricEl);
+                });
+                //the reason of doing youtubeLinkP is bacause the audd api
+                //is not so clever with result
+                //sometimes the result's key-value pari sequence will change
+                var youtubeLinkP = JSON.parse(response.result[i].media);
+                var youtubeLink;
+                youtubeLinkP.forEach(function(el){
+                    if (el.provider === "youtube"){
+                        youtubeLink = el.url;
+                    }
+                });
+                var youtube = $("<a>").attr({
+                    "class": "button is-small is-danger is-rounded mt-card",
+                    "href": youtubeLink,
+                    "target": "_blank"
+                }).text("Youtube"); 
+                var cardFooter = $("<footer>").addClass("card-footer"); 
+                var detailsBtn = $("<a>").attr({
+                    "id":"detailsBtn",
+                    "class": "is-dark is-rounded button card-footer-item"
+                }).text("Details");
+                cardFooter.append(detailsBtn);
+                cardHeader.append(title);
+                content.append(artist, $("<br>"),youtube);  
+                cardContent.append(content);
+                card.append(cardHeader, cardContent, cardFooter);
+                col.append(card);           
+                $("#resultDisplay").append(col);  
+            });   
         })
         console.log(lyricsLineArray); 
     }else{
@@ -399,12 +408,14 @@ function displayResultArtist(response){
         var cardHeader = $("<header>").addClass("card-header");
         var title = $("<p>").attr({
             "class": "card-header-title is-centered",
+            // "style": "color: white",
             "id": "title"+i,
         }).text(element.strAlbum);
         var cardContent = $("<div>").addClass("card-content is-centered");
         var content = $("<div>").addClass("content");
         var artist = $("<button>").attr({
             "id": "artistName",
+            // "style": "color: white",
             "value": element.strArtist,
             "class": "button is-danger"
         }).text(element.strArtist);            

@@ -30,3 +30,12 @@ body{
 #detailsBtn:hover{
     background-color:rgb(177, 112, 112);
 }
+
+.card-header-title{
+    color:white;
+    background-color:rgb(57, 56, 56);
+}
+
+.content{
+    color:white;
+}
