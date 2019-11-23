@@ -10,3 +10,23 @@ body{
     /* margin:0px; */
     max-width:100%;
 }
+
+.card-image{
+    width:20%;
+    height:20%;
+    margin:auto;
+    transition:all 2s;
+}
+
+.card-image:hover{
+    width:40%;
+    height:40%;
+}
+
+#detailsBtn{
+    transition:all 1s;
+}
+
+#detailsBtn:hover{
+    background-color:rgb(177, 112, 112);
+}
