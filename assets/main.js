@@ -59,8 +59,20 @@ $("#result").on("click", "#detailsBtn", function(){
 });
 
 $("#result").on("click", "#artistName", function(){
-    details();
-    bioSearch();
+    if(select === "1"){
+        details();
+        var artist = $(this).attr("value");
+        console.log("1");
+        bioSearch2(artist);
+    }else if(select === "2"){
+        details();
+        bioSearch();
+        console.log("2");
+    }
+});
+
+$("#details").on("click", "#artistName", function(){
+
 });
 
 //this is where all the functions are put
@@ -215,6 +227,18 @@ function artistSearch(){
 
 function bioSearch(){
     var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+input;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        console.log("4.Bio");
+        console.log(response);
+        displayResultBio(response);
+    });
+}
+
+function bioSearch2(artist){
+    var queryURL = "https://theaudiodb.com/api/v1/json/1/search.php?s="+artist;
     $.ajax({
         url: queryURL,
         method: "GET"
@@ -386,7 +410,7 @@ function displayResultBio(response){
         content.append(bio);  
         cardContent.append(content);
         card.append(cardHeader, cardContent, cardFooter);
-        col.append(card)
+        col.append(card);
         $("#detailsDisplay").append(col);
     }
 }
