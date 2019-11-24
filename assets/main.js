@@ -169,10 +169,14 @@ function trendingSearch(){
         var cardHeader = $("<header>").addClass("card-header");
         var title = $("<p>").attr({
             "class": "card-header-title is-centered",
+            "style": "color: white"
             // "id": "title",
         }).text("Current Trending Albums: ");
         var cardContent = $("<div>").addClass("card-content is-centered");
-        var content = $("<div>").addClass("content");           
+        var content = $("<div>").attr({
+            "class": "content",
+            "style": "color: white"
+        });           
         response.trending.forEach(function(element,i){ 
             // i = i+1; 
             var li = $("<div>").text(i+1+". "+element.strAlbum + " ---- " + element.strArtist); 
