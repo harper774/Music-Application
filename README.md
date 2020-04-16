@@ -14,6 +14,6 @@ Click [here](https://dmitriyaloyts.github.io/Music-Application/) for the live ap
 * RESTfull API's
 
 ## Authors
-Stacey K, Dmitry A, Devin N , Harper L
+Stacey K, Dmitry A, Devin T , Harper L
 
 Enjoy your music!
